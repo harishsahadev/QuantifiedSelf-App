@@ -13,8 +13,8 @@ def index():
 @app.route("/register", methods=["GET","POST"])
 def register():
     error = None
+    form = RegistrationForm()
     if request.method == "GET":
-        form = RegistrationForm()
         return render_template('register.html', title="Register", form=form)
 
     if request.method == "POST":
@@ -23,7 +23,7 @@ def register():
         #Check for existing user
         user = User.query.filter_by(username=username).first()
         if user != None:
-            flash('Try a different Username','error')
+            flash('Try a different Username', category='danger')
             return render_template('register.html', title="Register", form=form)
 
 
