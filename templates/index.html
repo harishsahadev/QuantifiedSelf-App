@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Welcome to Quantified Self App</h1>
+    <form action="/dashboard/{{ user }}" method="POST" id="create-course-form">
+        <div class="form-outline mb-4">
+            <label for="usename" class="form-label">Username:</label>
+            <input type="text" class="form-control form-control-lg" name="uname" required />
+        </div>
+        <div class="form-outline mb-4">
+            <label for="password" class="form-label">Password:</label>
+            <input type="text" class="form-control form-control-lg" name="pswd" required />
+        </div>
+        <div class="form-outline mb-4">
+            <button type="button" class="btn btn-secondary">Submit</button>
+        </div>
+        <br>
+        <div class="form-outline mb-4">
+            <label for="usename" class="form-label">New User?</label>
+            <a href ="{{ url_for('register') }}" type="button" class="btn btn-info" >Register</a>
+        </div>
+    </form>
+{% endblock content%}
