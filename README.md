@@ -1,2 +1,2 @@
-# harishsahadev-QuantifiedSelf-App
+# QuantifiedSelf-App
 MAD I - Final Project
