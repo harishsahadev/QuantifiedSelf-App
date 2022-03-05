@@ -4,7 +4,9 @@ class User(db.Model):
     __tablename__ = 'user'
     userid = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    fname = db.Column(db.String, nullable=False)
+    lname = db.Column(db.String)
 
 class Tracker_type(db.Model):
     __tablename__ = 'tracker_type'
@@ -16,5 +18,5 @@ class Tracker(db.Model):
     trackerid = db.Column(db.Integer, autoincrement=True, primary_key=True)
     trackername = db.Column(db.String, unique=True, nullable=False)
     description = db.Column(db.String)
-    type = db.Column(db.Integer, db.ForeignKey("tracker_type.type"), nullable=False)
+    typeid = db.Column(db.Integer, db.ForeignKey("tracker_type.typeid"), nullable=False)
     userid = db.Column(db.Integer, db.ForeignKey("user.userid"), nullable=False)

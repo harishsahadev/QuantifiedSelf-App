@@ -7,6 +7,7 @@ app = None
 
 def create_app():
     app = Flask(__name__, template_folder="templates")
+    app.config['SECRET_KEY'] = "haveAgoodDay"
     if os.getenv('ENV', "development") == "production":
         raise Exception("Currently no production config is setup.")
     else:
