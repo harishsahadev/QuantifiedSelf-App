@@ -5,35 +5,42 @@ from application.forms import RegistrationForm, LoginForm
 from application.database import db
 
 
-@app.route("/")
+@app.route("/", methods=["GET","POST"])
 def index():
-    # Front Page
-    return render_template('index.html', title = 'About')
+    # Front Page and Login page
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        username = request.form["username"]
+        user = User.query.filter_by(username=username).first()
+        if (user == None) or (user.password != request.form["password"]):
+            flash("Login unsuccessful! Please check username or password.", category='danger')
+            return render_template('login.html', title="Login", form=form)
+        else:
+            return redirect(url_for('dashboard', userid=user.userid))
+  
+    return render_template('login.html', title = 'Login', form=form)
 
 @app.route("/register", methods=["GET","POST"])
 def register():
-    error = None
     form = RegistrationForm()
-    if request.method == "GET":
-        return render_template('register.html', title="Register", form=form)
-
-    if request.method == "POST":
+    if form.validate_on_submit():
         username = request.form["username"]
         print(username)
         #Check for existing user
         user = User.query.filter_by(username=username).first()
         if user != None:
             flash('Try a different Username', category='danger')
-            return render_template('register.html', title="Register", form=form)
+
+        else:
+            user = User(username=username, password=request.form["password"], fname=request.form["fname"], lname=request.form["lname"])
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration Successful! Welcome to Quantified Self', category='success')
+            return redirect(url_for("index"))
+    return render_template('register.html', title="Register", form=form)
 
 
-        user = User(username=username, password=request.form["password"], fname=request.form["fname"], lname=request.form["lname"])
-        db.session.add(user)
-        db.session.commit()
-        #if form.validate_on_submit():
-          #  flash(f'{form.username.data}, successfully Registered!', 'success')
-        return redirect(url_for("index"))
-
-@app.route("/dashboard/<int:user>")
+@app.route("/dashboard/<int:userid>")
 def dashboard():
     return render_template('dashboard.html')
