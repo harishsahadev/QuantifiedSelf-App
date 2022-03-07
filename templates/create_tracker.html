@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block main_content %}
+    <h2>Add Tracker</h2>
+    <form>
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" id="name">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+        </div>
+        <div class="dropdown mb-3">
+            <label for="courses" class="form-label">Select Tracker Type </label> &emsp;
+            <select name="tracker_type" id="tracker_type" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> 
+                {% for each_type in tracker_type %}
+                <option value="{{ each_type['typeid'] }}">{{ each_type['type'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+{% endblock main_content%}

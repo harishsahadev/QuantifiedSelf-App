@@ -7,6 +7,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     fname = db.Column(db.String, nullable=False)
     lname = db.Column(db.String)
+    tracker = db.relationship('Tracker', cascade="all, delete") # one-to-many relationship with delete on cascade
 
 class Tracker_type(db.Model):
     __tablename__ = 'tracker_type'

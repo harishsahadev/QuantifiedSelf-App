@@ -42,5 +42,16 @@ def register():
 
 
 @app.route("/dashboard/<int:userid>")
-def dashboard():
-    return render_template('dashboard.html')
+def dashboard(userid):
+    user = User.query.filter_by(userid=userid).first()
+    tracker = Tracker.query.filter_by(userid=userid).all()
+    #if tracker == None:
+        #return render_template("create_tracker.html", title="Dashboard", username=user.fname)
+
+    return render_template('dashboard.html', title="Dashboard", username=user.fname, userid=userid, tracker=tracker)
+
+@app.route("/dashboard/<int:userid>/create")
+def create_tracker(userid):
+    user = User.query.filter_by(userid=userid).first()
+    tracker_type = Tracker_type.query.all()
+    return render_template('create_tracker.html', title="Create Tracker", username=user.fname, tracker_type=tracker_type)
