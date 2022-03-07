@@ -31,7 +31,6 @@ def register():
         user = User.query.filter_by(username=username).first()
         if user != None:
             flash('Try a different Username', category='danger')
-
         else:
             user = User(username=username, password=request.form["password"], fname=request.form["fname"], lname=request.form["lname"])
             db.session.add(user)
@@ -45,13 +44,21 @@ def register():
 def dashboard(userid):
     user = User.query.filter_by(userid=userid).first()
     tracker = Tracker.query.filter_by(userid=userid).all()
-    #if tracker == None:
-        #return render_template("create_tracker.html", title="Dashboard", username=user.fname)
 
     return render_template('dashboard.html', title="Dashboard", username=user.fname, userid=userid, tracker=tracker)
 
-@app.route("/dashboard/<int:userid>/create")
+tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
+
+@app.route("/dashboard/<int:userid>/create", methods=["GET","POST"])
 def create_tracker(userid):
     user = User.query.filter_by(userid=userid).first()
-    tracker_type = Tracker_type.query.all()
-    return render_template('create_tracker.html', title="Create Tracker", username=user.fname, tracker_type=tracker_type)
+    #print(Tracker_type.type['typeid'=2])
+    print(tracker_type[1])
+
+    if request.method == "POST":
+        type = request.form.get('tracker_type')
+        print(type)
+        if tracker_type[1] == type:
+            return render_template("multiple_choice.html", title="Add choices", username=user.fname, userid=userid)
+
+    return render_template('create_tracker.html', title="Create Tracker", username=user.fname, userid=userid, tracker_type=tracker_type)
