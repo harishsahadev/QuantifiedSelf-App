@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, url_for, flash
+from flask import redirect, render_template, request, url_for, flash, session
 from flask import current_app as app
 from application.models import User, Tracker_type, Tracker
 from application.forms import RegistrationForm, LoginForm
@@ -13,12 +13,15 @@ def index():
     if form.validate_on_submit():
         username = request.form["username"]
         user = User.query.filter_by(username=username).first()
+        session["user"] = user.userid
         if (user == None) or (user.password != request.form["password"]):
             flash("Login unsuccessful! Please check username or password.", category='danger')
             return render_template('login.html', title="Login", form=form)
         else:
             return redirect(url_for('dashboard', userid=user.userid))
-  
+    
+    if "user" in session:
+        return redirect(url_for("dashboard", userid=session["user"]))
     return render_template('login.html', title = 'Login', form=form)
 
 @app.route("/register", methods=["GET","POST"])
@@ -42,6 +45,8 @@ def register():
 
 @app.route("/dashboard/<int:userid>")
 def dashboard(userid):
+    if "user" not in session:
+        return redirect(url_for("index"))
     user = User.query.filter_by(userid=userid).first()
     tracker = Tracker.query.filter_by(userid=userid).all()
 
@@ -51,14 +56,18 @@ tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
 
 @app.route("/dashboard/<int:userid>/create", methods=["GET","POST"])
 def create_tracker(userid):
+    if "user" not in session:
+        return redirect(url_for("index"))
     user = User.query.filter_by(userid=userid).first()
-    #print(Tracker_type.type['typeid'=2])
-    print(tracker_type[1])
-
+    
     if request.method == "POST":
         type = request.form.get('tracker_type')
-        print(type)
         if tracker_type[1] == type:
             return render_template("multiple_choice.html", title="Add choices", username=user.fname, userid=userid)
 
     return render_template('create_tracker.html', title="Create Tracker", username=user.fname, userid=userid, tracker_type=tracker_type)
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("index"))
