@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Welcome to Quantified Self App</h1>
-    <form action="/dashboard/{{ user }}" method="POST" id="create-course-form">
+    <form action="{{ url_for('dashboard', userid=userid) }}" method="POST" id="create-course-form">
         <div class="form-outline mb-4">
             <label for="usename" class="form-label">Username:</label>
             <input type="text" class="form-control form-control-lg" name="uname" required />
