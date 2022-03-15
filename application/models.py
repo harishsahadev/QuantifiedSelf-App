@@ -28,3 +28,7 @@ class MultipleChoice(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     trackerid = db.Column(db.Integer, db.ForeignKey("tracker.trackerid"), nullable=False)
     choices = db.Column(db.String, nullable=False)
+
+class Logs(db.Model):
+    __tablename__ = 'logs'
+    logid = db.Column(db.Integer, autoincrement=True, primary_key=True)

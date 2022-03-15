@@ -49,7 +49,7 @@ def dashboard(userid):
         return redirect(url_for("index"))
     user = User.query.filter_by(userid=session["user"]).first()
     trackers = Tracker.query.filter_by(userid=userid).all()
-    print(trackers)
+    #print(trackers)
     return render_template('dashboard.html', title="Dashboard", username=user.fname, userid=userid, trackers=trackers)
 
 tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
@@ -76,7 +76,7 @@ def create_tracker():
 
     return render_template('create_tracker.html', title="Create Tracker", username=user.fname, tracker_type=tracker_type)
 
-@app.route("/dashboard/multiple_choice", methods=["GET","POST"])
+@app.route("/dashboard/create/multiple_choice", methods=["GET","POST"])
 def multiple_choice():
     if "user" not in session:
         return redirect(url_for("index"))
@@ -93,6 +93,22 @@ def multiple_choice():
         return redirect(url_for('dashboard', userid=session["user"]))
 
     return render_template('multiple_choice.html', title="Create Tracker", username=user.fname)
+
+
+@app.route("/dashboard/logs/<int:trackerid>", methods=["GET","POST"])
+def logs(trackerid):
+    if "user" not in session:
+        return redirect(url_for("index"))
+
+    user = User.query.filter_by(userid=session["user"]).first()
+    tracker = Tracker.query.filter_by(trackerid=trackerid).first()
+    if request.method == "POST":
+        pass
+
+
+    return render_template('logs.html', title="LOG", username=user.fname, trackerid=trackerid)
+
+
 
 @app.route("/logout")
 def logout():
