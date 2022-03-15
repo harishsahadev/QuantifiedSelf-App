@@ -21,6 +21,7 @@ class Tracker(db.Model):
     description = db.Column(db.String)
     type = db.Column(db.String, nullable=False)
     userid = db.Column(db.Integer, db.ForeignKey("user.userid"), nullable=False)
+    lastseen = db.Column(db.DateTime)
 
 class MultipleChoice(db.Model):
     __tablename__ = 'multiple_choice'

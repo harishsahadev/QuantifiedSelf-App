@@ -12,8 +12,10 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Description</th>
+                <th scope="col">Last Tracked</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -21,8 +23,10 @@
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ tracker['trackername'] }}</td>
-                    <td>{{ tracker['type'] }}</td>
-                    <td>{{ tracker['description'] }}</td>
+                    <td>{{ tracker['lastseen'] }}</td>
+                    <td><a href="#" type="button" class="btn btn-success btn-sm">Add Log</a></td>
+                    <td><a href="#" type="button" class="btn btn-info btn-sm">Edit Tracker</a></td>
+                    <td><a href="#" type="button" class="btn btn-danger btn-sm">Delete Tracker</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

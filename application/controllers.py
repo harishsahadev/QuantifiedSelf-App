@@ -61,8 +61,8 @@ def create_tracker():
     user = User.query.filter_by(userid=session["user"]).first()
     
     if request.method == "POST":
-        tracker = Tracker.query.filter_by(userid=session["user"]).first()
-        if tracker.trackername == request.form["name"]:
+        tracker = Tracker.query.filter_by(trackername=request.form["name"], userid=session["user"] ).first()
+        if tracker != None:
             flash('Tracker Already Exist!', category='danger')
         else:
             tracker = Tracker(trackername=request.form["name"], description=request.form["description"], type=request.form.get('tracker_type'), userid=session["user"])
@@ -90,7 +90,7 @@ def multiple_choice():
             db.session.add(mcq)
             db.session.commit()
 
-        return redirect(url_for('dashboard'), userid=session["user"])
+        return redirect(url_for('dashboard', userid=session["user"]))
 
     return render_template('multiple_choice.html', title="Create Tracker", username=user.fname)
 
