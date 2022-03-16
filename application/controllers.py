@@ -3,6 +3,7 @@ from flask import current_app as app
 from application.models import *
 from application.forms import RegistrationForm, LoginForm
 from application.database import db
+import datetime
 
 
 @app.route("/", methods=["GET","POST"])
@@ -18,6 +19,7 @@ def index():
             return render_template('login.html', title="Login", form=form)
         else:
             session["user"] = user.userid
+            session["username"] = user.username
             return redirect(url_for('dashboard', userid=user.userid))
     
     if "user" in session:
@@ -94,6 +96,38 @@ def multiple_choice():
 
     return render_template('multiple_choice.html', title="Create Tracker", username=user.fname)
 
+@app.route("/dashboard/update/<int:trackerid>", methods=["GET","POST"])
+def tracker_update(trackerid):
+    if "user" not in session:
+        return redirect(url_for("index"))
+    
+    tracker = Tracker.query.filter_by(trackerid=trackerid).first()
+    #print(tracker.description)
+
+    if request.method == "POST":
+        trackercheck = Tracker.query.filter_by(trackername=request.form["name"], userid=session["user"] ).first()
+        if (trackercheck != None) and (tracker.trackername != request.form["name"]):
+            flash('Tracker Already Exist!', category='danger')
+        else:
+            tracker.trackername = request.form["name"]
+            tracker.description = request.form["description"]
+            db.session.commit()
+
+        return redirect(url_for('dashboard', userid=session["user"]))
+
+    return render_template("tracker_update.html", username=session["username"], title="Update Tracker", tracker=tracker)
+
+@app.route("/dashboard/delete/<int:trackerid>", methods=["GET","POST"])
+def tracker_delete(trackerid):
+    if "user" not in session:
+        return redirect(url_for("index"))
+    
+    tracker = Tracker.query.filter_by(trackerid=trackerid).first()
+    db.session.delete(tracker)
+    db.session.commit()
+
+    return redirect(url_for('dashboard', userid=session["user"]))
+
 
 @app.route("/dashboard/logs/<int:trackerid>", methods=["GET","POST"])
 def logs(trackerid):
@@ -101,16 +135,26 @@ def logs(trackerid):
         return redirect(url_for("index"))
 
     user = User.query.filter_by(userid=session["user"]).first()
-    tracker = Tracker.query.filter_by(trackerid=trackerid).first()
+    
+    time_now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+    #print(time_now)
     if request.method == "POST":
-        pass
+        tracker = Tracker.query.filter_by(trackerid=trackerid).first()
+        date_time = datetime.datetime.strptime(request.form["datetime"], "%Y-%m-%dT%H:%M")
+        #print(type(date_time))
+        tracker.lastseen = date_time
+        log = Logs(trackerid=trackerid, value=request.form["value"], note=request.form["note"], datetime=date_time)
+        db.session.add(log)
+        db.session.commit()
+
+        return redirect(url_for('dashboard', userid=session["user"]))
 
 
-    return render_template('logs.html', title="LOG", username=user.fname, trackerid=trackerid)
-
+    return render_template('logs.html', title="LOG", username=user.fname, trackerid=trackerid, time_now=time_now)
 
 
 @app.route("/logout")
 def logout():
     session.pop("user", None)
+    session.pop("username", None)
     return redirect(url_for("index"))

@@ -24,9 +24,9 @@
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ tracker['trackername'] }}</td>
                     <td>{{ tracker['lastseen'] }}</td>
-                    <td><a href="/dashboard/logs/{{ tracker['trackerid'] }}" type="button" class="btn btn-success btn-sm">Add Log</a></td>
-                    <td><a href="#" type="button" class="btn btn-info btn-sm">Edit Tracker</a></td>
-                    <td><a href="#" type="button" class="btn btn-danger btn-sm">Delete Tracker</a></td>
+                    <td><a href="{{ url_for('logs', trackerid=tracker.trackerid) }}" type="button" class="btn btn-success btn-sm">Add Log</a></td>
+                    <td><a href="{{ url_for('tracker_update', trackerid=tracker.trackerid) }}" type="button" class="btn btn-info btn-sm">Edit Tracker</a></td>
+                    <td><a href="{{ url_for('tracker_delete', trackerid=tracker.trackerid) }}" type="button" class="btn btn-danger btn-sm">Delete Tracker</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -22,6 +22,8 @@ class Tracker(db.Model):
     type = db.Column(db.String, nullable=False)
     userid = db.Column(db.Integer, db.ForeignKey("user.userid"), nullable=False)
     lastseen = db.Column(db.DateTime)
+    mcq = db.relationship('MultipleChoice', cascade="all, delete")
+    log = db.relationship('Logs', cascade="all, delete")
 
 class MultipleChoice(db.Model):
     __tablename__ = 'multiple_choice'
@@ -32,3 +34,7 @@ class MultipleChoice(db.Model):
 class Logs(db.Model):
     __tablename__ = 'logs'
     logid = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    trackerid = db.Column(db.Integer, db.ForeignKey("tracker.trackerid"), nullable=False)
+    value = db.Column(db.String, nullable=False)
+    note = db.Column(db.String)
+    datetime = db.Column(db.DateTime, nullable=False)
