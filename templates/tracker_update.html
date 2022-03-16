@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 {% block main_content %}
 <h2>Update Tracker</h2>
-<form action="{{ url_for('tracker_update', trackerid=tracker.trackerid ) }}" method="POST" id="update-student-form">
+<form class='card p-3 bg-light border-4' action="{{ url_for('tracker_update', trackerid=tracker.trackerid ) }}" method="POST" id="update-student-form" >
     <div class="mb-3">
         <label class="form-label">Name</label>
         <input type="text" class="form-control" name="name" id="name" value="{{ tracker['trackername'] }}" required>
+    </div>
+    <div class="dropdown mb-3">
+        <label for="courses" class="form-label">Tracker Type: </label> &emsp;
+        <button name="tracker_type" id="tracker_type" class="btn btn-secondary" type="button" disabled>{{ tracker['type'] }}</button>
     </div>
     <div class="mb-3">
         <label class="form-label">Description</label>
         <textarea class="form-control" name="description" id="description" rows="3" >{{ tracker['description'] }}</textarea>
     </div>
-    <div class="dropdown mb-3">
-        <label for="courses" class="form-label">Tracker Type </label> &emsp;
-        <button name="tracker_type" id="tracker_type" class="btn btn-secondary" type="button" disabled>{{ tracker['type'] }}</button>
-    </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-info">Submit</button>
-        <button type="reset" class="btn btn-info">Reset to Original</button>
+        <button type="submit" class="btn btn-success">Submit</button>&emsp;
+        <button type="reset" class="btn btn-secondary">Reset to Original</button>&emsp;
+        <a href="{{ url_for('dashboard', userid=userid) }}" class="btn btn-danger" type="button" >Cancel</a>
     </div>
 </form>
 {% endblock main_content%}

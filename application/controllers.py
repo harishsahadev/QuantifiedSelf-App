@@ -26,6 +26,7 @@ def index():
         return redirect(url_for("dashboard", userid=session["user"]))
     return render_template('login.html', title = 'Login', form=form)
 
+
 @app.route("/register", methods=["GET","POST"])
 def register():
     form = RegistrationForm()
@@ -54,6 +55,7 @@ def dashboard(userid):
     #print(trackers)
     return render_template('dashboard.html', title="Dashboard", username=user.fname, userid=userid, trackers=trackers)
 
+
 tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
 
 @app.route("/dashboard/create", methods=["GET","POST"])
@@ -78,6 +80,7 @@ def create_tracker():
 
     return render_template('create_tracker.html', title="Create Tracker", username=user.fname, tracker_type=tracker_type)
 
+
 @app.route("/dashboard/create/multiple_choice", methods=["GET","POST"])
 def multiple_choice():
     if "user" not in session:
@@ -95,6 +98,7 @@ def multiple_choice():
         return redirect(url_for('dashboard', userid=session["user"]))
 
     return render_template('multiple_choice.html', title="Create Tracker", username=user.fname)
+
 
 @app.route("/dashboard/update/<int:trackerid>", methods=["GET","POST"])
 def tracker_update(trackerid):
@@ -115,7 +119,8 @@ def tracker_update(trackerid):
 
         return redirect(url_for('dashboard', userid=session["user"]))
 
-    return render_template("tracker_update.html", username=session["username"], title="Update Tracker", tracker=tracker)
+    return render_template("tracker_update.html", userid=session["user"], username=session["username"], title="Update Tracker", tracker=tracker)
+
 
 @app.route("/dashboard/delete/<int:trackerid>", methods=["GET","POST"])
 def tracker_delete(trackerid):
@@ -149,8 +154,7 @@ def logs(trackerid):
 
         return redirect(url_for('dashboard', userid=session["user"]))
 
-
-    return render_template('logs.html', title="LOG", username=user.fname, trackerid=trackerid, time_now=time_now)
+    return render_template('logs.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
 
 
 @app.route("/logout")

@@ -7,7 +7,7 @@
     {% else %}
     <div>
         <h1>Your Trackers</h1>
-        <table class="table">
+        <table class="table table-hover">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -21,18 +21,18 @@
             <tbody>
                 {% for tracker in trackers %}
                 <tr>
-                    <th scope="row">{{ loop.index }}</th>
-                    <td>{{ tracker['trackername'] }}</td>
+                    <td>{{ loop.index }}</td>
+                    <th scope="row"><a href="#" class="link-primary">{{ tracker['trackername'] }}</a></th>
                     <td>{{ tracker['lastseen'] }}</td>
                     <td><a href="{{ url_for('logs', trackerid=tracker.trackerid) }}" type="button" class="btn btn-success btn-sm">Add Log</a></td>
-                    <td><a href="{{ url_for('tracker_update', trackerid=tracker.trackerid) }}" type="button" class="btn btn-info btn-sm">Edit Tracker</a></td>
+                    <td><a href="{{ url_for('tracker_update', trackerid=tracker.trackerid) }}" type="button" class="btn btn-secondary btn-sm">Edit Tracker</a></td>
                     <td><a href="{{ url_for('tracker_delete', trackerid=tracker.trackerid) }}" type="button" class="btn btn-danger btn-sm">Delete Tracker</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
           </table>
 
-        <a href="{{ url_for('create_tracker', userid=userid) }}" type="button" class="btn btn-secondary btn-lg">Add a Tracker</a>
+        <a href="{{ url_for('create_tracker', userid=userid) }}" type="button" class="btn btn-dark btn-md">Add a Tracker</a>
     </div>
     {% endif %}
 {% endblock main_content%}
