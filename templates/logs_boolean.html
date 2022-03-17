@@ -1,0 +1,16 @@
+{% extends "logs.html" %}
+{% block tracker_value %}
+    <div class="mb-3">
+        <label class="form-label" >Select - {{ trackername }}:</label>
+        <div class="btn-group-justified">
+            <div class="btn-group">
+                <input class="btn-check" type="radio" name="choice" value="Positive" id="Positive"/>
+                <label class="btn btn-outline-success" for="Positive">Positive</label>&emsp;
+            </div>
+            <div class="btn-group">
+                <input class="btn-check" type="radio" name="choice" value="Negative" id="Negative"/>
+                <label class="btn btn-outline-danger" for="Negative">Negative</label>
+            </div>
+        </div>
+    </div>
+{% endblock tracker_value %}

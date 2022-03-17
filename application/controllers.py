@@ -80,7 +80,7 @@ def create_tracker():
         #print(session["user"])
         return redirect(url_for('dashboard', userid=session["user"]))
 
-    return render_template('create_tracker.html', title="Create Tracker", username=user.fname, tracker_type=tracker_type)
+    return render_template('create_tracker.html', title="Create Tracker",userid=session["user"], username=user.fname, tracker_type=tracker_type)
 
 
 @app.route("/dashboard/create/multiple_choice/<int:trackerid>", methods=["GET","POST"])
@@ -150,15 +150,14 @@ def logs(trackerid):
             return render_template('logs_numeric.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
 
         if tracker.type == "Muliple Choice":
-            
             mcqs = MultipleChoice.query.filter_by(trackerid=trackerid).all()
             return render_template('logs_mcq.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now, mcqs=mcqs, trackername=tracker.trackername)
 
         if tracker.type == "Boolean":
-            return render_template('logs_boolean.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
+            return render_template('logs_boolean.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now, trackername=tracker.trackername)
 
         if tracker.type == "Time Duration":
-            return render_template('logs_timeduration.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
+            pass
 
     if request.method == "POST":
 
@@ -172,14 +171,26 @@ def logs(trackerid):
             return redirect(url_for('dashboard', userid=session["user"]))
 
         if tracker.type == "Muliple Choice":
-            #print(request.form["choice"])
             log = Logs(trackerid=trackerid, value=request.form["choice"], note=request.form["note"], datetime=date_time)
             db.session.add(log)
             db.session.commit()
             return redirect(url_for('dashboard', userid=session["user"]))
 
+        if tracker.type == "Boolean":
+            log = Logs(trackerid=trackerid, value=request.form["choice"], note=request.form["note"], datetime=date_time)
+            db.session.add(log)
+            db.session.commit()
+            return redirect(url_for('dashboard', userid=session["user"]))
+
+        if tracker.type == "Time Duration":
+
+            pass
+
+        
+
         return redirect(url_for('dashboard', userid=session["user"]))
-    
+
+
 
 
 @app.route("/logout")

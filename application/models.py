@@ -39,4 +39,13 @@ class Logs(db.Model):
     note = db.Column(db.String)
     datetime = db.Column(db.DateTime, nullable=False)
 
+
+class TimeDuration(db.Model):
+    __tablename__ = 'time_duration'
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    trackerid = db.Column(db.Integer, db.ForeignKey("tracker.trackerid"), nullable=False)
+    state = db.Column(db.String, nullable=False)
+
+
+
 #tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
