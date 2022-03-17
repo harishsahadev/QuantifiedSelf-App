@@ -190,6 +190,14 @@ def logs(trackerid):
 
         return redirect(url_for('dashboard', userid=session["user"]))
 
+@app.route("/dashboard/tracker/<int:trackerid>", methods=["GET","POST"])
+def trackers(trackerid):
+    if "user" not in session:
+        return redirect(url_for("index"))
+    
+    return "<h1>Work in Progress</h1>"
+
+
 
 
 
