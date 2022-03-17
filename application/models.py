@@ -38,3 +38,5 @@ class Logs(db.Model):
     value = db.Column(db.String, nullable=False)
     note = db.Column(db.String)
     datetime = db.Column(db.DateTime, nullable=False)
+
+#tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]

@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block main_content %}
-    <h2>Add Tracker</h2>
+    <h2>Add Log </h2>
     <form class='card p-3 bg-light border-4' action="{{ url_for('logs', trackerid=trackerid) }}" method="POST" id="add-logs-form">
         <div>
             <label class="form-label" for="datetime">When:&emsp;</label>
             <input id="date-time" type="datetime-local" name="datetime" value="{{ time_now }}">
         </div>
-        <div class="mb-3">
-            <label class="form-label">Value</label>
-            <input type="text" class="form-control" name="value" id="value" required>
-        </div>
+        
+        {% block tracker_value %}{% endblock %}
+
         <div class="mb-3">
             <label class="form-label">Note</label>
             <textarea class="form-control" name="note" id="note" rows="3"></textarea>

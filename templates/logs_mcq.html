@@ -1,0 +1,15 @@
+{% extends "logs.html" %}
+{% block tracker_value %}
+    <div class="mb-3">
+        <label class="form-label" >Select - {{ trackername }}:</label>
+        <div class="btn-group-justified">
+            {% for mcq in mcqs %}
+            <div class="btn-group">
+                <input class="btn-check" type="radio" name="choice" value="{{ mcq['choices'] }}" id="{{ mcq['choices'] }}"/>
+                <label class="btn btn-outline-secondary" for="{{ mcq['choices'] }}">{{ mcq['choices'] }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock tracker_value %}

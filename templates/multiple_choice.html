@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block main_content %}
     <h2>Add Tracker</h2>
-    <form action="{{ url_for('multiple_choice') }}" method="POST" id="multiple-choices-form">
+    <form action="{{ url_for('multiple_choice', trackerid=trackerid) }}" method="POST" id="multiple-choices-form">
         <div class="mb-3">
             <label class="form-label">Choices for Multi-Choice Tracker</label>
             <textarea class="form-control" name="choices" id="choices" placeholder="Please enter comma seperated values&#10;Example: happy,sad,angry" rows="3"></textarea>

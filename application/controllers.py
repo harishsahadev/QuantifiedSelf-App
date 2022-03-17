@@ -74,30 +74,31 @@ def create_tracker():
             db.session.commit()
 
             if tracker_type[1] == request.form.get('tracker_type'):
-                return redirect(url_for('multiple_choice'))
+                tracker = Tracker.query.filter_by(trackername=request.form["name"], userid=session["user"] ).first()
+                print(tracker)
+                return redirect(url_for('multiple_choice', trackerid=tracker.trackerid))
         #print(session["user"])
         return redirect(url_for('dashboard', userid=session["user"]))
 
     return render_template('create_tracker.html', title="Create Tracker", username=user.fname, tracker_type=tracker_type)
 
 
-@app.route("/dashboard/create/multiple_choice", methods=["GET","POST"])
-def multiple_choice():
+@app.route("/dashboard/create/multiple_choice/<int:trackerid>", methods=["GET","POST"])
+def multiple_choice(trackerid):
     if "user" not in session:
         return redirect(url_for("index"))
     user = User.query.filter_by(userid=session["user"]).first()
 
     if request.method == "POST":
-        tracker = Tracker.query.filter_by(userid=session["user"]).first()
         choices = request.form["choices"].split(",")
         for item in choices:
-            mcq = MultipleChoice(trackerid=tracker.trackerid, choices=item)
+            mcq = MultipleChoice(trackerid=trackerid, choices=item)
             db.session.add(mcq)
             db.session.commit()
 
         return redirect(url_for('dashboard', userid=session["user"]))
 
-    return render_template('multiple_choice.html', title="Create Tracker", username=user.fname)
+    return render_template('multiple_choice.html', title="Create Tracker", username=user.fname, trackerid=trackerid)
 
 
 @app.route("/dashboard/update/<int:trackerid>", methods=["GET","POST"])
@@ -140,21 +141,45 @@ def logs(trackerid):
         return redirect(url_for("index"))
 
     user = User.query.filter_by(userid=session["user"]).first()
-    
+    tracker = Tracker.query.filter_by(trackerid=trackerid).first()    
     time_now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
-    #print(time_now)
+
+    if request.method == "GET":
+
+        if tracker.type == "Numeric":
+            return render_template('logs_numeric.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
+
+        if tracker.type == "Muliple Choice":
+            
+            mcqs = MultipleChoice.query.filter_by(trackerid=trackerid).all()
+            return render_template('logs_mcq.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now, mcqs=mcqs, trackername=tracker.trackername)
+
+        if tracker.type == "Boolean":
+            return render_template('logs_boolean.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
+
+        if tracker.type == "Time Duration":
+            return render_template('logs_timeduration.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
+
     if request.method == "POST":
-        tracker = Tracker.query.filter_by(trackerid=trackerid).first()
+
         date_time = datetime.datetime.strptime(request.form["datetime"], "%Y-%m-%dT%H:%M")
-        #print(type(date_time))
         tracker.lastseen = date_time
-        log = Logs(trackerid=trackerid, value=request.form["value"], note=request.form["note"], datetime=date_time)
-        db.session.add(log)
-        db.session.commit()
+
+        if tracker.type == "Numeric":
+            log = Logs(trackerid=trackerid, value=request.form["value"], note=request.form["note"], datetime=date_time)
+            db.session.add(log)
+            db.session.commit()
+            return redirect(url_for('dashboard', userid=session["user"]))
+
+        if tracker.type == "Muliple Choice":
+            #print(request.form["choice"])
+            log = Logs(trackerid=trackerid, value=request.form["choice"], note=request.form["note"], datetime=date_time)
+            db.session.add(log)
+            db.session.commit()
+            return redirect(url_for('dashboard', userid=session["user"]))
 
         return redirect(url_for('dashboard', userid=session["user"]))
-
-    return render_template('logs.html', title="LOG", userid=session["user"], username=user.fname, trackerid=trackerid, time_now=time_now)
+    
 
 
 @app.route("/logout")
