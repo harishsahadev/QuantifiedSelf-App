@@ -56,7 +56,7 @@ def dashboard(userid):
     return render_template('dashboard.html', title="Dashboard", username=user.fname, userid=userid, trackers=trackers)
 
 
-tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
+tracker_type = ["Numeric", "Muliple Choice", "Boolean"] # "Time Duration",
 
 @app.route("/dashboard/create", methods=["GET","POST"])
 def create_tracker():
@@ -195,11 +195,49 @@ def trackers(trackerid):
     if "user" not in session:
         return redirect(url_for("index"))
     
+    logs = Logs.query.filter_by(trackerid=trackerid).all()
+    tracker = Tracker.query.filter_by(trackerid=trackerid).first()  
+
+    return render_template("tracker_log.html",logs=logs, userid=session["user"],tracker=tracker, username=session["username"], title="Tracker Logs")
+
+
+@app.route("/dashboard/log_update/<int:trackerid>", methods=["GET","POST"])
+def log_update(trackerid):
+    if "user" not in session:
+        return redirect(url_for("index"))
+
+    #user = User.query.filter_by(userid=session["user"]).first
+    logs = Logs.query.filter_by(trackerid=trackerid).all()
+    tracker = Tracker.query.filter_by(trackerid=trackerid).first()  
+    time_now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+
     return "<h1>Work in Progress</h1>"
 
+    if request.method == "GET":
+
+        if tracker.type == "Numeric":
+            return render_template('log_update.html', title="LOG", userid=session["user"], username=session["username"], time_now=time_now, tracker=tracker)
+
+        if tracker.type == "Muliple Choice":
+            mcqs = MultipleChoice.query.filter_by(trackerid=trackerid).all()
+            return render_template('log_update.html', title="LOG", userid=session["user"], username=session["username"], time_now=time_now, mcqs=mcqs, tracker=tracker, )
+
+        if tracker.type == "Boolean":
+            return render_template('log_update.html', title="LOG", userid=session["user"], username=session["username"], tracker=tracker, time_now=time_now)
+
+        if tracker.type == "Time Duration":
+            pass
+
+
+    return render_template("log_update.html",logs=logs, userid=session["user"], tracker=tracker, username=session["username"], title="Log Update")
 
 
 
+@app.route("/dashboard/log_delete/<int:trackerid>", methods=["GET","POST"])
+def log_delete(trackerid):
+    if "user" not in session:
+        return redirect(url_for("index"))
+    return "<p>work in progress</p>"
 
 @app.route("/logout")
 def logout():

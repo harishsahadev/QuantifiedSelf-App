@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block main_content %}
     {% if trackers|length == 0 %}
-    <div>
+    <div class="text-center">
         <a href="{{ url_for('create_tracker', userid=userid) }}" type="button" class="btn btn-secondary btn-lg">Add a Tracker</a>
     </div>
     {% else %}

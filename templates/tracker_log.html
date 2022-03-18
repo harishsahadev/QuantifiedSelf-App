@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block main_content %}
+<h1>Logs - {{ tracker["trackername"] }}</h1>
+<table class="table table-bordered border-primary">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Logged On</th>
+            <th scope="col">Value</th>
+            <th scope="col">Note</th>
+            <th scope="col" style='text-align:center; vertical-align:middle'> Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ log['datetime'] }}</td>
+            <td>{{ log['value'] }}</td>
+            <td>{{ log['note'] }}</td>
+            <td style='text-align:center; vertical-align:middle'>
+                <a href="{{ url_for('log_update', trackerid=tracker.trackerid) }}" type="button" class="btn btn-secondary btn-sm">Edit Tracker</a>&nbsp;
+                <a href="{{ url_for('log_delete', trackerid=tracker.trackerid) }}" type="button" class="btn btn-danger btn-sm">Delete Tracker</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="text-center">
+    <a href="{{ url_for('dashboard', userid=userid) }}" type="button" class="btn btn-dark btn-md">Return to Dashboard</a>
+</div>
+{% endblock main_content%}
