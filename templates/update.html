@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block main_content %}
+
+    <h2>Update Log </h2>
+    <form class='card p-3 bg-light border-4' action="{{ url_for('log_update', logid=log.logid) }}" method="POST" id="update-logs-form">
+        <div>
+            <label class="form-label" for="datetime">When:&emsp;</label>
+            <input id="date-time" type="datetime-local" name="datetime" value="{{ date_time }}">
+        </div>
+        
+        {% block update_value %}{% endblock %}
+
+        <div class="mb-3">
+            <label class="form-label">Note</label>
+            <textarea class="form-control" name="note" id="note" rows="3">{{ log.note }}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Submit</button>&emsp;
+            <button type="reset" class="btn btn-secondary">Reset to Original</button>&emsp;
+            <a href="{{ url_for('trackers', trackerid=log.trackerid) }}" class="btn btn-danger" type="button" >Cancel</a>
+        </div>
+    </form>
+
+{% endblock main_content%}

@@ -19,8 +19,8 @@
             <td>{{ log['value'] }}</td>
             <td>{{ log['note'] }}</td>
             <td style='text-align:center; vertical-align:middle'>
-                <a href="{{ url_for('log_update', trackerid=tracker.trackerid) }}" type="button" class="btn btn-secondary btn-sm">Edit Tracker</a>&nbsp;
-                <a href="{{ url_for('log_delete', trackerid=tracker.trackerid) }}" type="button" class="btn btn-danger btn-sm">Delete Tracker</a>
+                <a href="{{ url_for('log_update', logid=log.logid) }}" type="button" class="btn btn-secondary btn-sm">Edit Log</a>&nbsp;
+                <a href="{{ url_for('log_delete', logid=log.logid) }}" type="button" class="btn btn-danger btn-sm">Delete Log</a>
             </td>
         </tr>
         {% endfor %}

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block main_content %}
+
     <h2>Add Log </h2>
     <form class='card p-3 bg-light border-4' action="{{ url_for('logs', trackerid=trackerid) }}" method="POST" id="add-logs-form">
         <div>

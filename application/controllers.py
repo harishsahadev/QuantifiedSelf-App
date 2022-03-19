@@ -168,25 +168,19 @@ def logs(trackerid):
             log = Logs(trackerid=trackerid, value=request.form["value"], note=request.form["note"], datetime=date_time)
             db.session.add(log)
             db.session.commit()
-            return redirect(url_for('dashboard', userid=session["user"]))
 
         if tracker.type == "Muliple Choice":
             log = Logs(trackerid=trackerid, value=request.form["choice"], note=request.form["note"], datetime=date_time)
             db.session.add(log)
             db.session.commit()
-            return redirect(url_for('dashboard', userid=session["user"]))
 
         if tracker.type == "Boolean":
             log = Logs(trackerid=trackerid, value=request.form["choice"], note=request.form["note"], datetime=date_time)
             db.session.add(log)
             db.session.commit()
-            return redirect(url_for('dashboard', userid=session["user"]))
 
         if tracker.type == "Time Duration":
-
             pass
-
-        
 
         return redirect(url_for('dashboard', userid=session["user"]))
 
@@ -201,40 +195,59 @@ def trackers(trackerid):
     return render_template("tracker_log.html",logs=logs, userid=session["user"],tracker=tracker, username=session["username"], title="Tracker Logs")
 
 
-@app.route("/dashboard/log_update/<int:trackerid>", methods=["GET","POST"])
-def log_update(trackerid):
+@app.route("/dashboard/log_update/<int:logid>", methods=["GET","POST"])
+def log_update(logid):
     if "user" not in session:
         return redirect(url_for("index"))
+    
 
-    #user = User.query.filter_by(userid=session["user"]).first
-    logs = Logs.query.filter_by(trackerid=trackerid).all()
-    tracker = Tracker.query.filter_by(trackerid=trackerid).first()  
-    time_now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+    log = Logs.query.filter_by(logid=logid).first()
+    tracker = Tracker.query.filter_by(trackerid=log.trackerid).first()  
+    dt = str(log.datetime)
+    date_time = dt[0:10]+"T"+dt[11:16]
 
-    return "<h1>Work in Progress</h1>"
 
     if request.method == "GET":
 
         if tracker.type == "Numeric":
-            return render_template('log_update.html', title="LOG", userid=session["user"], username=session["username"], time_now=time_now, tracker=tracker)
+            return render_template('update_numeric.html', title="LOG update", userid=session["user"], username=session["username"], log=log, date_time=date_time)
 
         if tracker.type == "Muliple Choice":
-            mcqs = MultipleChoice.query.filter_by(trackerid=trackerid).all()
-            return render_template('log_update.html', title="LOG", userid=session["user"], username=session["username"], time_now=time_now, mcqs=mcqs, tracker=tracker, )
+            mcqs = MultipleChoice.query.filter_by(trackerid=log.trackerid).all()
+            return render_template('update_mcq.html', title="LOG update", userid=session["user"], username=session["username"], log=log, trackername=tracker.trackername, mcqs=mcqs, date_time=date_time)
 
         if tracker.type == "Boolean":
-            return render_template('log_update.html', title="LOG", userid=session["user"], username=session["username"], tracker=tracker, time_now=time_now)
+            return render_template('update_boolean.html', title="LOG update", userid=session["user"], username=session["username"], log=log, trackername=tracker.trackername, date_time=date_time)
 
         if tracker.type == "Time Duration":
             pass
 
+    if request.method == "POST":
 
-    return render_template("log_update.html",logs=logs, userid=session["user"], tracker=tracker, username=session["username"], title="Log Update")
+        date_time = datetime.datetime.strptime(request.form["datetime"], "%Y-%m-%dT%H:%M")
+
+        if tracker.type == "Numeric":
+            log.datetime = date_time
+            log.value = request.form["value"]
+            log.note = request.form["note"]
+            db.session.commit()
+
+        if tracker.type == "Muliple Choice":
+            pass
+
+        if tracker.type == "Boolean":
+            pass
+
+        if tracker.type == "Time Duration":
+            pass
+
+        
+        
+        return redirect(url_for("trackers", trackerid=log.trackerid))
 
 
-
-@app.route("/dashboard/log_delete/<int:trackerid>", methods=["GET","POST"])
-def log_delete(trackerid):
+@app.route("/dashboard/log_delete/<int:logid>", methods=["GET","POST"])
+def log_delete(logid):
     if "user" not in session:
         return redirect(url_for("index"))
     return "<p>work in progress</p>"
