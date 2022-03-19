@@ -233,14 +233,19 @@ def log_update(logid):
             db.session.commit()
 
         if tracker.type == "Muliple Choice":
-            pass
+            log.datetime = date_time
+            log.value = request.form["choice"]
+            log.note = request.form["note"]
+            db.session.commit()
 
         if tracker.type == "Boolean":
-            pass
+            log.datetime = date_time
+            log.value = request.form["choice"]
+            log.note = request.form["note"]
+            db.session.commit()
 
         if tracker.type == "Time Duration":
             pass
-
         
         
         return redirect(url_for("trackers", trackerid=log.trackerid))
@@ -250,7 +255,12 @@ def log_update(logid):
 def log_delete(logid):
     if "user" not in session:
         return redirect(url_for("index"))
-    return "<p>work in progress</p>"
+    
+    log = Logs.query.filter_by(logid=logid).first()
+    db.session.delete(log)
+    db.session.commit()
+
+    return redirect(url_for('dashboard', userid=session["user"]))
 
 @app.route("/logout")
 def logout():
