@@ -1,10 +1,14 @@
+from genericpath import exists
 from flask import redirect, render_template, request, url_for, flash, session
 from flask import current_app as app
 from application.models import *
 from application.forms import RegistrationForm, LoginForm
 from application.database import db
 import datetime
-
+import matplotlib
+import matplotlib.pyplot as plt
+#import matplotlib.dates as mdates
+#matplotlib.use('Agg')
 
 @app.route("/", methods=["GET","POST"])
 def index():
@@ -179,9 +183,6 @@ def logs(trackerid):
             db.session.add(log)
             db.session.commit()
 
-        if tracker.type == "Time Duration":
-            pass
-
         return redirect(url_for('dashboard', userid=session["user"]))
 
 @app.route("/dashboard/tracker/<int:trackerid>", methods=["GET","POST"])
@@ -192,7 +193,57 @@ def trackers(trackerid):
     logs = Logs.query.filter_by(trackerid=trackerid).all()
     tracker = Tracker.query.filter_by(trackerid=trackerid).first()  
 
-    return render_template("tracker_log.html",logs=logs, userid=session["user"],tracker=tracker, username=session["username"], title="Tracker Logs")
+    if tracker.type == "Numeric":
+        x,y = [],[]
+
+        for i in range(0,len(logs)):
+            x.append(str(logs[i].datetime)[0:16])
+            y.append(float(logs[i].value))
+
+        #print(x,y)
+        plt.clf()
+        #ax = plt.axes()
+        #ax.set_facecolor('silver')
+        plt.style.use('_classic_test_patch')
+        plt.xlabel('Date-Time')
+        plt.ylabel('Value')
+        plt.title("Tracker Graph")
+        plt.bar(x, y, color ='green', width = 0.5)
+        plt.grid(axis='y', linestyle = '--')
+        plt.savefig('static/graph.png', transparent=True)
+    
+    if tracker.type == "Muliple Choice":
+        data = {}
+        for i in range(0,len(logs)):
+            if logs[i].value in data.keys():
+                data[logs[i].value] += 1
+            else:
+                data[logs[i].value] = 1
+        #print(data,x)
+        labels = list(data.keys())
+        sizes = list(data.values())
+
+        plt.clf()
+        plt.title("Tracker Graph")
+        plt.pie(sizes, labels=labels, autopct='%1.1i%%')
+        plt.savefig('static/graph.png', transparent=True)
+
+    if tracker.type == "Boolean":
+        data = {}
+        for i in range(0,len(logs)):
+            if logs[i].value in data.keys():
+                data[logs[i].value] += 1
+            else:
+                data[logs[i].value] = 1
+        #print(data,x)
+        labels = list(data.keys())
+        sizes = list(data.values())
+
+        plt.clf()
+        plt.pie(sizes, labels=labels, autopct='%1.1i%%')
+        plt.savefig('static/graph.png', transparent=True)
+
+    return render_template("tracker_log.html", logs=logs, userid=session["user"],tracker=tracker, username=session["username"], title="Tracker Logs")
 
 
 @app.route("/dashboard/log_update/<int:logid>", methods=["GET","POST"])
@@ -219,9 +270,6 @@ def log_update(logid):
         if tracker.type == "Boolean":
             return render_template('update_boolean.html', title="LOG update", userid=session["user"], username=session["username"], log=log, trackername=tracker.trackername, date_time=date_time)
 
-        if tracker.type == "Time Duration":
-            pass
-
     if request.method == "POST":
 
         date_time = datetime.datetime.strptime(request.form["datetime"], "%Y-%m-%dT%H:%M")
@@ -243,10 +291,6 @@ def log_update(logid):
             log.value = request.form["choice"]
             log.note = request.form["note"]
             db.session.commit()
-
-        if tracker.type == "Time Duration":
-            pass
-        
         
         return redirect(url_for("trackers", trackerid=log.trackerid))
 

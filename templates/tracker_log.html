@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block main_content %}
 <h1>Logs - {{ tracker["trackername"] }}</h1>
+<div class="text-center">
+    <img src="/static/graph.png" class="rounded" alt="Bargraph"/>
+</div>
+<br>
 <table class="table table-bordered border-primary">
     <thead>
         <tr>

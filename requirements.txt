@@ -6,3 +6,4 @@ Jinja2==3.0.3
 SQLAlchemy==1.4.31
 Werkzeug==2.0.3
 WTForms==3.0.1
+matplotlib==3.5.1
