@@ -1,8 +1,10 @@
+<!-- ADD LOGS FORM WITHOUT VALUE PART -->
+
 {% extends "base.html" %}
 {% block main_content %}
 
     <h2>Add Log </h2>
-    <form class='card p-3 bg-light border-4' action="{{ url_for('logs', trackerid=trackerid) }}" method="POST" id="add-logs-form">
+    <form class='card p-3 bg-light border-4 bg-transparent' action="{{ url_for('logs', trackerid=trackerid) }}" method="POST" id="add-logs-form">
         <div>
             <label class="form-label" for="datetime">When:&emsp;</label>
             <input id="date-time" type="datetime-local" name="datetime" value="{{ time_now }}">

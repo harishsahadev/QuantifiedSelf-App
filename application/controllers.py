@@ -1,4 +1,3 @@
-from genericpath import exists
 from flask import redirect, render_template, request, url_for, flash, session
 from flask import current_app as app
 from application.models import *
@@ -6,11 +5,13 @@ from application.forms import RegistrationForm, LoginForm
 from application.database import db
 import datetime
 import matplotlib.pyplot as plt
-#matplotlib.use('Agg')
+
+
+
+#---------------------------INDEX AND LOGIN-------------------------------#
 
 @app.route("/", methods=["GET","POST"])
 def index():
-    # Front Page and Login page
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -28,6 +29,8 @@ def index():
         return redirect(url_for("dashboard", userid=session["user"]))
     return render_template('login.html', title = 'Login', form=form)
 
+
+#---------------------------REGISTRATION-------------------------------#
 
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -48,6 +51,8 @@ def register():
     return render_template('register.html', title="Register", form=form)
 
 
+#---------------------------DASHBOARD-------------------------------#
+
 @app.route("/dashboard/<int:userid>")
 def dashboard(userid):
     if "user" not in session:
@@ -58,7 +63,11 @@ def dashboard(userid):
     return render_template('dashboard.html', title="Dashboard", username=user.fname, userid=userid, trackers=trackers)
 
 
-tracker_type = ["Numeric", "Muliple Choice", "Boolean"] # "Time Duration",
+#---------------------------TRACKER TYPES-------------------------------#
+tracker_type = ["Numeric", "Muliple Choice", "Boolean"] 
+
+
+#---------------------------CREATE TRACKER-------------------------------#
 
 @app.route("/dashboard/create", methods=["GET","POST"])
 def create_tracker():
@@ -85,6 +94,8 @@ def create_tracker():
     return render_template('create_tracker.html', title="Create Tracker",userid=session["user"], username=user.fname, tracker_type=tracker_type)
 
 
+#---------------------------MULTIPLE CHOICES FOR MCQ-TRACKER-------------------------------#
+
 @app.route("/dashboard/create/multiple_choice/<int:trackerid>", methods=["GET","POST"])
 def multiple_choice(trackerid):
     if "user" not in session:
@@ -102,6 +113,8 @@ def multiple_choice(trackerid):
 
     return render_template('multiple_choice.html', title="Create Tracker", username=user.fname, trackerid=trackerid)
 
+
+#---------------------------UPDATE TRACKER-------------------------------#
 
 @app.route("/dashboard/update/<int:trackerid>", methods=["GET","POST"])
 def tracker_update(trackerid):
@@ -125,6 +138,8 @@ def tracker_update(trackerid):
     return render_template("tracker_update.html", userid=session["user"], username=session["username"], title="Update Tracker", tracker=tracker)
 
 
+#---------------------------DELETE TRACKER-------------------------------#
+
 @app.route("/dashboard/delete/<int:trackerid>", methods=["GET","POST"])
 def tracker_delete(trackerid):
     if "user" not in session:
@@ -136,6 +151,8 @@ def tracker_delete(trackerid):
 
     return redirect(url_for('dashboard', userid=session["user"]))
 
+
+#---------------------------ADD LOG-------------------------------#
 
 @app.route("/dashboard/logs/<int:trackerid>", methods=["GET","POST"])
 def logs(trackerid):
@@ -183,6 +200,9 @@ def logs(trackerid):
 
         return redirect(url_for('dashboard', userid=session["user"]))
 
+
+#---------------------------TRACKER WITH LOGS AND GRAPHS-------------------------------#
+
 @app.route("/dashboard/tracker/<int:trackerid>", methods=["GET","POST"])
 def trackers(trackerid):
     if "user" not in session:
@@ -198,15 +218,14 @@ def trackers(trackerid):
             x.append(str(logs[i].datetime)[0:16])
             y.append(float(logs[i].value))
 
-        #print(x,y)
         plt.clf()
         #ax = plt.axes()
         #ax.set_facecolor('silver')
         plt.style.use('_classic_test_patch')
         plt.xlabel('Date-Time')
         plt.ylabel('Value')
-        plt.title("Tracker Graph")
-        plt.bar(x, y, color ='#1B6E2D', width = 0.5)
+        plt.title("Trend Line")
+        plt.plot(x, y, color ='#1B6E2D', marker = 'D', ms = 6, mfc = 'hotpink')
         plt.grid(axis='y', linestyle = '--')
         plt.gcf().autofmt_xdate()
         plt.tight_layout()
@@ -224,7 +243,8 @@ def trackers(trackerid):
         sizes = list(data.values())
 
         plt.clf()
-        plt.title("Tracker Graph")
+        plt.style.use('_classic_test_patch')
+        plt.title("Share Pie")
         plt.pie(sizes, labels=labels, autopct='%1.1i%%')
         plt.savefig('static/graph.png', transparent=True)
 
@@ -235,16 +255,20 @@ def trackers(trackerid):
                 data[logs[i].value] += 1
             else:
                 data[logs[i].value] = 1
-        #print(data,x)
+        
         labels = list(data.keys())
         sizes = list(data.values())
-
         plt.clf()
-        plt.pie(sizes, labels=labels, autopct='%1.1i%%')
+        plt.bar(range(len(data)), sizes, tick_label=labels)
+        plt.grid(axis='y', linestyle = '--')
+        plt.title("BARified progress")
+        plt.ylabel('Count')
         plt.savefig('static/graph.png', transparent=True)
 
     return render_template("tracker_log.html", logs=logs, userid=session["user"],tracker=tracker, username=session["username"], title="Tracker Logs")
 
+
+#---------------------------UPDATE LOGS-------------------------------#
 
 @app.route("/dashboard/log_update/<int:logid>", methods=["GET","POST"])
 def log_update(logid):
@@ -295,6 +319,8 @@ def log_update(logid):
         return redirect(url_for("trackers", trackerid=log.trackerid))
 
 
+#---------------------------DELETE LOGS-------------------------------#
+
 @app.route("/dashboard/log_delete/<int:logid>", methods=["GET","POST"])
 def log_delete(logid):
     if "user" not in session:
@@ -305,6 +331,9 @@ def log_delete(logid):
     db.session.commit()
 
     return redirect(url_for('dashboard', userid=session["user"]))
+
+
+#---------------------------LOGOUT-------------------------------#
 
 @app.route("/logout")
 def logout():

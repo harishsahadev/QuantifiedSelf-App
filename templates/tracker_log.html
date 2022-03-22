@@ -1,6 +1,11 @@
+<!-- TRACKER WITH LOGS AND GRAPH -->
+
 {% extends "base.html" %}
 {% block main_content %}
-<h1>Logs - {{ tracker["trackername"] }}</h1>
+<h1>Logs for <em><u>{{ tracker["trackername"] }}</u></em> tracker</h1>
+{% if logs|length == 0 %}
+<h5>Looks Empty here :(</h5>
+{% else %}
 <div class="text-center">
     <img src="/static/graph.png" class="rounded" alt="Bargraph"/>
 </div>
@@ -29,7 +34,9 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
 <div class="text-center">
+    <a href="{{ url_for('logs', trackerid=tracker.trackerid) }}" type="button" class="btn btn-success btn-md">Add Log</a>&emsp;
     <a href="{{ url_for('dashboard', userid=userid) }}" type="button" class="btn btn-dark btn-md">Return to Dashboard</a>
 </div>
 {% endblock main_content%}

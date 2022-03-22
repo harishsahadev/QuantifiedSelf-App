@@ -9,11 +9,6 @@ class User(db.Model):
     lname = db.Column(db.String)
     tracker = db.relationship('Tracker', cascade="all, delete") # one-to-many relationship with delete on cascade
 
-#class Tracker_type(db.Model):
-  #  __tablename__ = 'tracker_type'
-  #  typeid = db.Column(db.Integer, autoincrement=True, primary_key=True)
-  #  type = db.Column(db.String, unique=True, nullable=False)
-
 class Tracker(db.Model):
     __tablename__ = 'tracker'
     trackerid = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -40,12 +35,4 @@ class Logs(db.Model):
     datetime = db.Column(db.DateTime, nullable=False)
 
 
-class TimeDuration(db.Model):
-    __tablename__ = 'time_duration'
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    trackerid = db.Column(db.Integer, db.ForeignKey("tracker.trackerid"), nullable=False)
-    state = db.Column(db.String, nullable=False)
-
-
-
-#tracker_type = ["Numeric", "Muliple Choice", "Time Duration", "Boolean"]
+#tracker_type = ["Numeric", "Muliple Choice", "Boolean"]

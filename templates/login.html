@@ -1,3 +1,5 @@
+<!-- LOGIN FORM -->
+
 {% extends "layout.html" %}
 {% block content %}
     <div class="container-fluid container mb-5">
@@ -38,11 +40,11 @@
                 
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-success mb-4") }}
+                {{ form.submit(class="btn btn-success mb-4") }}
             </div>
         </form>
         <div class="border-top pt-3">
-            <small class="text-muted">
+            <small class="text">
                 New to Quantified Self? <a class="ml-2" href="{{ url_for('register') }}">Register</a>
             </small>
         </div>

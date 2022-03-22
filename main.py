@@ -14,7 +14,6 @@ def create_app():
         print("Starting Local Development")
         app.config.from_object(LocalDevelopmentConfig)
     db.init_app(app)
-    #api = Api(app)
     app.app_context().push()
     return app
 

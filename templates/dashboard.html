@@ -1,8 +1,11 @@
+<!-- DASHBOARD -->
+
 {% extends "base.html" %}
 {% block main_content %}
     {% if trackers|length == 0 %}
+    <h3>Looks Empty here :(</h3>
     <div class="text-center">
-        <a href="{{ url_for('create_tracker', userid=userid) }}" type="button" class="btn btn-secondary btn-lg">Add a Tracker</a>
+      <a href="{{ url_for('create_tracker', userid=userid) }}" type="button" class="btn btn-dark btn-lg">Add a Tracker</a>
     </div>
     {% else %}
     <div>
@@ -22,7 +25,7 @@
                 {% for tracker in trackers %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <th scope="row"><a href="{{ url_for('trackers', trackerid=tracker.trackerid) }}" class="link-primary">{{ tracker['trackername'] }}</a></th>
+                    <th scope="row"><a href="{{ url_for('trackers', trackerid=tracker.trackerid) }}" class="link-dark">{{ tracker['trackername'] }}</a></th>
                     <td>{{ tracker['lastseen'] }}</td>
                     <td><a href="{{ url_for('logs', trackerid=tracker.trackerid) }}" type="button" class="btn btn-success btn-sm">Add Log</a></td>
                     <td><a href="{{ url_for('tracker_update', trackerid=tracker.trackerid) }}" type="button" class="btn btn-secondary btn-sm">Edit Tracker</a></td>
