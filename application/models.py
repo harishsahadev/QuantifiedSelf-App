@@ -17,7 +17,7 @@ class User(db.Model):
 class Tracker(db.Model):
     __tablename__ = 'tracker'
     trackerid = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    trackername = db.Column(db.String, unique=True, nullable=False)
+    trackername = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     type = db.Column(db.String, nullable=False)
     userid = db.Column(db.Integer, db.ForeignKey("user.userid"), nullable=False)

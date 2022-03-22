@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section">
+    <div class="container-fluid container mb-5">
         <form method="POST" action="" >
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -79,14 +79,15 @@
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-secondary mb-4") }}
+                {{ form.submit(class="btn btn-outline-success mb-4") }}
             </div>
         </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already Have an Account? <a class="ml-2" href="{{ url_for('index') }}">Sign In</a>
+            </small>
+        </div>
     </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Already Have an Account? <a class="ml-2" href="{{ url_for('index') }}">Sign In</a>
-        </small>
-    </div>
+    
 
 {% endblock content%}

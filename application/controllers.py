@@ -5,9 +5,7 @@ from application.models import *
 from application.forms import RegistrationForm, LoginForm
 from application.database import db
 import datetime
-import matplotlib
 import matplotlib.pyplot as plt
-#import matplotlib.dates as mdates
 #matplotlib.use('Agg')
 
 @app.route("/", methods=["GET","POST"])
@@ -208,8 +206,10 @@ def trackers(trackerid):
         plt.xlabel('Date-Time')
         plt.ylabel('Value')
         plt.title("Tracker Graph")
-        plt.bar(x, y, color ='green', width = 0.5)
+        plt.bar(x, y, color ='#1B6E2D', width = 0.5)
         plt.grid(axis='y', linestyle = '--')
+        plt.gcf().autofmt_xdate()
+        plt.tight_layout()
         plt.savefig('static/graph.png', transparent=True)
     
     if tracker.type == "Muliple Choice":

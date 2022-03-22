@@ -11,7 +11,7 @@
     <title>Quantified Self</title>
     {% endif %}
 </head>
-<body style="background-color:#D4D1CC;">
+<body style="background-color:#D8C199;">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -21,7 +21,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-
+        
     {% block content %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

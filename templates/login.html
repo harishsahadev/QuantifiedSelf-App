@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section">
+    <div class="container-fluid container mb-5">
         <form method="POST" action="" >
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Login Now</legend>
+                <legend class="border-bottom mb-4">Login to Quantified-Self</legend>
                 <div class="form-group" >
                     {{ form.username.label(class="form-control-label ") }}
 
@@ -38,14 +38,15 @@
                 
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-secondary mb-4") }}
+                {{ form.submit(class="btn btn-outline-success mb-4") }}
             </div>
         </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                New to Quantified Self? <a class="ml-2" href="{{ url_for('register') }}">Register</a>
+            </small>
+        </div>
     </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            New to Quantified Self? <a class="ml-2" href="{{ url_for('register') }}">Register</a>
-        </small>
-    </div>
+    
 
 {% endblock content%}
