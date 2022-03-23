@@ -208,15 +208,22 @@ def trackers(trackerid):
     if "user" not in session:
         return redirect(url_for("index"))
     
-    logs = Logs.query.filter_by(trackerid=trackerid).all()
+    logs = Logs.query.filter_by(trackerid=trackerid).order_by(Logs.datetime).all()
     tracker = Tracker.query.filter_by(trackerid=trackerid).first()  
 
     if tracker.type == "Numeric":
-        x,y = [],[]
+        x,y,data = [],[],{}
 
         for i in range(0,len(logs)):
-            x.append(str(logs[i].datetime)[0:16])
-            y.append(float(logs[i].value))
+            #x.append(str(logs[i].datetime)[0:16])
+            #y.append(float(logs[i].value))
+            data[str(logs[i].datetime)[0:16]] = float(logs[i].value)
+        sorted_data = dict(sorted(data.items()))
+
+        #print(data, sorted_data)
+
+        x = list(sorted_data.keys())
+        y = list(sorted_data.values())
 
         plt.clf()
         #ax = plt.axes()
